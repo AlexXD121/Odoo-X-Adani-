@@ -1,23 +1,23 @@
 import Link from 'next/link';
-import { LayoutDashboard, PenTool, Calendar, ListTodo, Users } from 'lucide-react';
+import { FaChartBar, FaCalendarAlt, FaTools, FaColumns, FaUsers } from 'react-icons/fa';
 
 const navItems = [
-    { href: '/dashboard/equipment', label: 'Equipment', icon: PenTool },
-    { href: '/dashboard/requests', label: 'Requests', icon: ListTodo },
-    { href: '/dashboard/kanban', label: 'Kanban', icon: LayoutDashboard },
-    { href: '/dashboard/calendar', label: 'Schedule', icon: Calendar },
-    { href: '/dashboard/teams', label: 'Teams', icon: Users },
+    { href: '/dashboard', label: 'Dashboard', icon: FaColumns },
+    { href: '/dashboard/calendar', label: 'Maintenance Calendar', icon: FaCalendarAlt },
+    { href: '/dashboard/equipment', label: 'Equipment', icon: FaTools },
+    { href: '/dashboard/reporting', label: 'Reporting', icon: FaChartBar },
+    { href: '/dashboard/teams', label: 'Teams', icon: FaUsers },
 ];
 
 export function Navbar() {
     return (
-        <nav className="bg-slate-900 text-slate-50 sticky top-0 z-50 shadow-md">
+        <nav className="bg-slate-900/50 backdrop-blur-md border-b border-white/10 text-slate-200 sticky top-0 z-50 shadow-sm">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center gap-2">
-                        <h1 className="text-xl font-bold tracking-tight text-emerald-400">GearGuard</h1>
-                        <span className="text-xs text-slate-400 hidden sm:inline-block">Maintenance Ops</span>
+                        <h1 className="text-xl font-bold tracking-tight text-emerald-400">Maintenance</h1>
+                        <span className="text-xs text-slate-400 hidden sm:inline-block">Operations</span>
                     </div>
 
                     {/* Navigation Links */}
