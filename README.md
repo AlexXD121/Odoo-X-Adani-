@@ -2,7 +2,7 @@
 > **The "Alive" CMMS for the Modern Factory.**
 > *Submitted for the Next.js Industrial Hackathon.*
 
-![MaintFlow Banner](public/logo.png)
+
 
 ## ⚡ What is MaintFlow?
 
