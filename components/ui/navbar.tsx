@@ -11,13 +11,13 @@ const navItems = [
 
 export function Navbar() {
     return (
-        <nav className="bg-slate-900/50 backdrop-blur-md border-b border-white/10 text-slate-200 sticky top-0 z-50 shadow-sm">
+        <nav className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center gap-2">
-                        <h1 className="text-xl font-bold tracking-tight text-emerald-400">Maintenance</h1>
-                        <span className="text-xs text-slate-400 hidden sm:inline-block">Operations</span>
+                        <h1 className="text-xl font-bold tracking-tight text-orange-600">Maintenance</h1>
+                        <span className="text-xs text-slate-500 hidden sm:inline-block">Operations</span>
                     </div>
 
                     {/* Navigation Links */}
@@ -26,7 +26,7 @@ export function Navbar() {
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md hover:bg-slate-800 hover:text-emerald-400 transition-colors"
+                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 rounded-md hover:bg-orange-50 hover:text-orange-600 transition-colors"
                             >
                                 <item.icon className="w-4 h-4" />
                                 {item.label}
@@ -44,7 +44,7 @@ export function Navbar() {
                         </Link>
                         <Link
                             href="/auth/signup"
-                            className="px-4 py-2 text-sm font-medium bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition-colors shadow-sm"
+                            className="px-4 py-2 text-sm font-medium bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors shadow-sm"
                         >
                             Sign Up
                         </Link>
