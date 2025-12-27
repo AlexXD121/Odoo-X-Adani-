@@ -63,6 +63,7 @@ model MaintenanceRequest {
   id          String   @id @default(uuid())
   title       String
   description String?
+  instructions String?
   priority    String   @default("medium") // low, medium, high, critical
   status      String   @default("pending") // pending, in-progress, completed
   type        String   @default("corrective") // preventive, corrective

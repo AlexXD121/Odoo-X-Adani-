@@ -4,6 +4,23 @@ import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { MaintenanceRequest } from "@prisma/client";
 
+export async function getRequestById(id: string) {
+    try {
+        const request = await db.maintenanceRequest.findUnique({
+            where: { id },
+            include: {
+                equipment: true,
+                assignedTo: true,
+                assignedTeam: true,
+            },
+        });
+        return { success: true, data: request };
+    } catch (error) {
+        console.error("Failed to fetch request:", error);
+        return { success: false, error: "Failed to fetch request" };
+    }
+}
+
 export async function getRequests() {
     try {
         const requests = await db.maintenanceRequest.findMany({
@@ -44,6 +61,11 @@ export async function createRequest(formData: FormData) {
         const priority = formData.get("priority") as string;
         const description = formData.get("description") as string;
         const scheduledDate = formData.get("scheduledDate") as string;
+        const type = formData.get("type") as string;
+
+        // "Magic" auto-fill fields coming from the client
+        const assignedTeamId = formData.get("assignedTeamId") as string;
+        const assignedToId = formData.get("assignedToId") as string;
 
         await db.maintenanceRequest.create({
             data: {
@@ -52,8 +74,10 @@ export async function createRequest(formData: FormData) {
                 priority,
                 description,
                 scheduledDate: scheduledDate ? new Date(scheduledDate) : undefined,
-                status: "pending",
-                type: "corrective" // Default
+                status: "new", // Explicitly 'new' per requirement badge, though schema default is 'pending'
+                type: type || "corrective",
+                assignedTeamId: assignedTeamId || undefined,
+                assignedToId: assignedToId || undefined,
             }
         });
 
@@ -62,5 +86,21 @@ export async function createRequest(formData: FormData) {
     } catch (error) {
         console.error("Failed to create request:", error);
         return { success: false, error: "Failed to create request" };
+    }
+}
+
+// Fetch equipment details for the "Magic" auto-fill
+export async function getEquipmentDetails(id: string) {
+    try {
+        const equipment = await db.equipment.findUnique({
+            where: { id },
+            include: {
+                maintenanceTeam: true,
+                technician: true, // This is the 'default technician'
+            }
+        });
+        return { success: true, data: equipment };
+    } catch (error) {
+        return { success: false, error: "Failed to fetch equipment details" };
     }
 }
