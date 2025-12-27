@@ -29,6 +29,8 @@ model MaintenanceRequest {
   status      String   @default("pending") // pending, in-progress, completed
   equipmentId String
   equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  assignedToId String?
+  assignedTo   User? @relation(fields: [assignedToId], references: [id])
   dueDate     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -47,6 +49,7 @@ model User {
   password  String
   name      String
   role      String   @default("portal_user")
+  assignedRequests MaintenanceRequest[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

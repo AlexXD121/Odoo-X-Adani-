@@ -1,11 +1,33 @@
 import Link from 'next/link';
-import { FaChartBar, FaCalendarAlt, FaTools, FaColumns, FaUsers } from 'react-icons/fa';
+import { FaChartBar, FaCalendarAlt, FaTools, FaColumns, FaUsers, FaBuilding, FaWrench } from 'react-icons/fa';
 
-const navItems = [
+interface NavItem {
+    href: string;
+    label: string;
+    icon: any;
+    subItems?: NavItem[];
+}
+
+const navItems: NavItem[] = [
     { href: '/dashboard', label: 'Dashboard', icon: FaColumns },
     { href: '/dashboard/calendar', label: 'Maintenance Calendar', icon: FaCalendarAlt },
-    { href: '/dashboard/equipment', label: 'Equipment', icon: FaTools },
-    { href: '/dashboard/reporting', label: 'Reporting', icon: FaChartBar },
+    {
+        href: '/dashboard/equipment',
+        label: 'Equipment',
+        icon: FaTools,
+        subItems: [
+            { href: '/dashboard/work-centers', label: 'Work Center', icon: FaBuilding },
+            { href: '/dashboard/equipment', label: 'Machines & Tools', icon: FaWrench },
+        ]
+    },
+    {
+        href: '/dashboard/reporting',
+        label: 'Reporting',
+        icon: FaChartBar,
+        subItems: [
+            { href: '/dashboard/reporting/maintenance', label: 'Maintenance Reports', icon: FaChartBar },
+        ]
+    },
     { href: '/dashboard/teams', label: 'Teams', icon: FaUsers },
 ];
 
@@ -23,14 +45,42 @@ export function Navbar() {
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center space-x-4">
                         {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 rounded-md hover:bg-orange-50 hover:text-orange-600 transition-colors"
-                            >
-                                <item.icon className="w-4 h-4" />
-                                {item.label}
-                            </Link>
+                            <div key={item.label} className="relative group">
+                                {item.subItems ? (
+                                    <button
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 rounded-md hover:bg-orange-50 hover:text-orange-600 transition-colors focus:outline-none"
+                                    >
+                                        <item.icon className="w-4 h-4" />
+                                        {item.label}
+                                    </button>
+                                ) : (
+                                    <Link
+                                        href={item.href}
+                                        className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 rounded-md hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                                    >
+                                        <item.icon className="w-4 h-4" />
+                                        {item.label}
+                                    </Link>
+                                )}
+
+                                {/* Dropdown Menu */}
+                                {item.subItems && (
+                                    <div className="absolute left-0 top-full pt-2 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 ease-in-out z-50">
+                                        <div className="bg-white border border-slate-200 rounded-md shadow-lg overflow-hidden py-1">
+                                            {item.subItems.map((subItem) => (
+                                                <Link
+                                                    key={subItem.href + subItem.label}
+                                                    href={subItem.href}
+                                                    className="flex items-center gap-2 px-4 py-2 text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-600 transition-colors"
+                                                >
+                                                    <subItem.icon className="w-3 h-3" />
+                                                    {subItem.label}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         ))}
                     </div>
 
@@ -38,7 +88,7 @@ export function Navbar() {
                     <div className="flex items-center gap-3">
                         <Link
                             href="/auth/login"
-                            className="text-sm font-medium text-slate-300 hover:text-white transition-colors"
+                            className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors"
                         >
                             Login
                         </Link>
@@ -53,17 +103,25 @@ export function Navbar() {
             </div>
 
             {/* Mobile Menu (Simplified for prototype) */}
-            <div className="md:hidden border-t border-slate-800 overflow-x-auto">
+            <div className="md:hidden border-t border-slate-200 overflow-x-auto">
                 <div className="flex items-center p-2 space-x-2">
                     {navItems.map((item) => (
-                        <Link
-                            key={item.href}
-                            href={item.href}
-                            className="flex-shrink-0 flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md hover:bg-slate-800 transition-colors"
-                        >
-                            <item.icon className="w-4 h-4 text-emerald-400" />
-                            {item.label}
-                        </Link>
+                        <div key={item.label} className="shrink-0">
+                            {item.subItems ? (
+                                <span className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 cursor-default">
+                                    <item.icon className="w-4 h-4" />
+                                    {item.label}
+                                </span>
+                            ) : (
+                                <Link
+                                    href={item.href}
+                                    className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-600 rounded-md hover:bg-slate-100 transition-colors"
+                                >
+                                    <item.icon className="w-4 h-4" />
+                                    {item.label}
+                                </Link>
+                            )}
+                        </div>
                     ))}
                 </div>
             </div>
