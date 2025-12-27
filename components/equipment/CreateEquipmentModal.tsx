@@ -38,6 +38,7 @@ const formSchema = z.object({
     location: z.string().min(1, "Location is required."),
     purchaseDate: z.date(),
     maintenanceTeamId: z.string().min(1, "Please select a maintenance team."),
+    technicianId: z.string().optional(),
     assignType: z.enum(["department", "employee"]),
     department: z.string().optional(),
     assignedEmployeeId: z.string().optional(),
@@ -51,18 +52,21 @@ const formSchema = z.object({
     return true;
 }, {
     message: "Please specify the assigned department or employee.",
-    path: ["department"], // generic path/field to attach error to
+    path: ["department"],
 });
 
 export function CreateEquipmentModal() {
     const [open, setOpen] = useState(false);
     const [teams, setTeams] = useState<{ id: string; name: string }[]>([]);
     const [employees, setEmployees] = useState<{ id: string; name: string }[]>([]);
+    const [technicians, setTechnicians] = useState<{ id: string; name: string }[]>([]);
 
     useEffect(() => {
         if (open) {
             getMaintenanceTeams().then((res) => setTeams(res.data || []));
             getEmployees().then((res) => setEmployees(res.data || []));
+            // Assuming technicians are also employees for now, but keeping state separate as requested
+            getEmployees().then((res) => setTechnicians(res.data || []));
         }
     }, [open]);
 
@@ -88,6 +92,8 @@ export function CreateEquipmentModal() {
         formData.append("location", values.location);
         formData.append("purchaseDate", values.purchaseDate.toISOString());
         formData.append("maintenanceTeamId", values.maintenanceTeamId);
+        if (values.technicianId) formData.append("technicianId", values.technicianId);
+
         formData.append("assignType", values.assignType);
         if (values.department) formData.append("department", values.department);
         if (values.assignedEmployeeId) formData.append("assignedEmployeeId", values.assignedEmployeeId);
@@ -228,6 +234,7 @@ export function CreateEquipmentModal() {
                                     </FormItem>
                                 )}
                             />
+
                             <FormField
                                 control={form.control}
                                 name="maintenanceTeamId"
@@ -244,6 +251,30 @@ export function CreateEquipmentModal() {
                                                 {teams.map((team) => (
                                                     <SelectItem key={team.id} value={team.id}>
                                                         {team.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="technicianId"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-slate-700">Default Technician (Optional)</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger className="border-slate-300">
+                                                    <SelectValue placeholder="Select default technician" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent className="bg-white border-slate-200">
+                                                {technicians.map((tech) => (
+                                                    <SelectItem key={tech.id} value={tech.id}>
+                                                        {tech.name}
                                                     </SelectItem>
                                                 ))}
                                             </SelectContent>

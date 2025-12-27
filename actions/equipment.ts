@@ -12,6 +12,7 @@ export async function createEquipment(formData: FormData) {
         const location = formData.get("location") as string;
         const purchaseDateStr = formData.get("purchaseDate") as string;
         const maintenanceTeamId = formData.get("maintenanceTeamId") as string;
+        const technicianId = formData.get("technicianId") as string;
 
         // Optional / Toggle logic
         const assignType = formData.get("assignType") as string; // 'department' or 'employee'
@@ -34,6 +35,7 @@ export async function createEquipment(formData: FormData) {
                 connect: { id: maintenanceTeamId }
             },
             status: "operational",
+            technician: technicianId ? { connect: { id: technicianId } } : undefined,
             department: assignType === 'department' ? department : undefined,
             assignedEmployee: assignType === 'employee' && assignedEmployeeId ? { connect: { id: assignedEmployeeId } } : undefined,
             // company default is set in schema
@@ -59,7 +61,7 @@ export async function getEquipmentList() {
                         requests: {
                             where: {
                                 status: {
-                                    not: "completed"
+                                    notIn: ["repaired", "scrapped", "completed"] // Also excluding completed to be safe, but adhering to spec "not 'repaired', 'scrapped'"
                                 }
                             }
                         }

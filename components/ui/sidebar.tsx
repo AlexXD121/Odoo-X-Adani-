@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PenTool, Users, ChevronRight } from 'lucide-react';
+import { PenTool, Users, ChevronRight, Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';;
 
 const navItems = [
@@ -10,6 +10,7 @@ const navItems = [
         ]
     },
     { href: '/dashboard/teams', label: 'Teams', icon: Users },
+    { href: '/dashboard/calendar', label: 'Schedule', icon: Calendar },
 ];
 
 export function Sidebar() {
