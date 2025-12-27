@@ -29,6 +29,7 @@ const formSchema = z.object({
     type: z.enum(["corrective", "preventive"]),
     priority: z.enum(["low", "medium", "high"]),
     description: z.string().optional(),
+    scheduledDate: z.string().optional(),
     // Hidden fields for submission
     assignedTeamId: z.string().optional(),
     assignedToId: z.string().optional(),
@@ -51,6 +52,7 @@ export default function NewRequestPage() {
             type: "corrective",
             priority: "medium",
             description: "",
+            scheduledDate: "",
             assignedTeamId: "",
             assignedToId: "",
         },
@@ -242,6 +244,25 @@ export default function NewRequestPage() {
                                     )}
                                 />
                             </div>
+
+                            <FormField
+                                control={form.control}
+                                name="scheduledDate"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-col">
+                                        <FormLabel className="text-slate-700">Scheduled Date</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="date"
+                                                {...field}
+                                                className="bg-white border-slate-300 w-full"
+                                                min={new Date().toISOString().split("T")[0]}
+                                            />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
 
                             <FormField
                                 control={form.control}
