@@ -60,7 +60,12 @@ export default async function MaintenanceReportingPage() {
             </div>
 
             {/* Charts */}
-            <Charts byStatus={analytics.byStatus} byPriority={analytics.byPriority} />
+            <Charts
+                byStatus={analytics.byStatus}
+                byPriority={analytics.byPriority}
+                byType={analytics.byType}
+                byTeam={analytics.byTeam}
+            />
         </div>
     );
 }

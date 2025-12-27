@@ -130,6 +130,34 @@ async function main() {
         }
     })
 
+    // Scenario A: CNC Machine (For Scrap Logic Test)
+    const cnc = await prisma.equipment.create({
+        data: {
+            name: 'CNC Machine X1',
+            serialNumber: 'CNC-2024-X1',
+            category: 'Heavy Machinery',
+            department: 'Production',
+            maintenanceTeamId: alphaSquad.id,
+            location: 'Factory Floor 1',
+            purchaseDate: new Date('2023-01-01'),
+            status: 'operational'
+        }
+    })
+
+    // Scenario B: Printer (For Preventive Calendar Test)
+    const printer = await prisma.equipment.create({
+        data: {
+            name: 'Office Printer P-500',
+            serialNumber: 'PRT-2024-001',
+            category: 'Electronics',
+            department: 'Office',
+            maintenanceTeamId: betaSquad.id,
+            location: 'Main Office',
+            purchaseDate: new Date('2024-01-01'),
+            status: 'operational'
+        }
+    })
+
     // Create Maintenance Requests with varied statuses and priorities
     await prisma.maintenanceRequest.create({
         data: {
@@ -237,7 +265,38 @@ async function main() {
             equipmentId: generator.id,
             assignedTeamId: betaSquad.id,
             scheduledDate: new Date(new Date().setDate(new Date().getDate() + 14)),
-            dueDate: new Date(new Date().setDate(new Date().getDate() + 14))
+        }
+    })
+
+    // Scenario A Request
+    await prisma.maintenanceRequest.create({
+        data: {
+            title: 'CNC Critical Failure',
+            description: 'Main spindle crack. Evaluate for scrap.',
+            priority: 'critical',
+            status: 'new', // Logic test: Move this to Scrap -> Check Equipment Status
+            type: 'corrective',
+            equipmentId: cnc.id,
+            assignedTeamId: alphaSquad.id
+        }
+    })
+
+    // Scenario B Request
+    const nextFriday = new Date()
+    nextFriday.setDate(nextFriday.getDate() + (12 - nextFriday.getDay()) % 7) // Simple approximation or just +3 days
+    if (nextFriday < new Date()) nextFriday.setDate(nextFriday.getDate() + 7)
+
+    await prisma.maintenanceRequest.create({
+        data: {
+            title: 'Printer Toner Check',
+            description: 'Regular toner check and cleaning.',
+            priority: 'low',
+            status: 'new',
+            type: 'preventive',
+            equipmentId: printer.id,
+            assignedTeamId: betaSquad.id,
+            scheduledDate: nextFriday,
+            dueDate: nextFriday
         }
     })
 

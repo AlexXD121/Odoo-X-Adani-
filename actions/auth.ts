@@ -1,6 +1,7 @@
 'use server';
 
 import { db } from "@/lib/db";
+import { createSession, deleteSession } from "@/lib/session";
 import { LoginSchema, SignupSchema } from "@/lib/validations/auth";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
@@ -28,7 +29,7 @@ export async function signup(formData: z.infer<typeof SignupSchema>) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    await db.user.create({
+    const user = await db.user.create({
         data: {
             name,
             email,
@@ -37,7 +38,8 @@ export async function signup(formData: z.infer<typeof SignupSchema>) {
         },
     });
 
-    redirect("/auth/login");
+    await createSession(user.id);
+    redirect("/dashboard");
 }
 
 export async function login(formData: z.infer<typeof LoginSchema>) {
@@ -67,8 +69,13 @@ export async function login(formData: z.infer<typeof LoginSchema>) {
         return { error: "Invalid Password" };
     }
 
-    // Create session (placeholder)
-    // await createSession(user.id);
+    // Create session
+    await createSession(user.id);
 
     redirect("/dashboard");
+}
+
+export async function logout() {
+    await deleteSession();
+    redirect("/auth/login");
 }

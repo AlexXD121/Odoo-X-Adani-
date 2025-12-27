@@ -60,14 +60,16 @@ export function Sidebar() {
 
 
             <div className="p-4 border-t border-sidebar-border space-y-2">
-                <Link href="/auth/login" className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-sidebar-foreground w-full hover:bg-sidebar-accent rounded-md transition-colors">
-                    <span className="w-5 h-5 flex items-center justify-center">🔐</span>
-                    Login
-                </Link>
-                <Link href="/auth/signup" className="flex items-center gap-3 px-4 py-2 text-sm text-muted-foreground hover:text-sidebar-foreground w-full hover:bg-sidebar-accent rounded-md transition-colors">
-                    <span className="w-5 h-5 flex items-center justify-center">✨</span>
-                    Sign Up
-                </Link>
+                <form action={async () => {
+                    "use server"
+                    const { logout } = await import("@/actions/auth")
+                    await logout()
+                }}>
+                    <button type="submit" className="flex items-center gap-3 px-4 py-2 text-sm text-sidebar-foreground hover:bg-orange-50 hover:text-primary w-full rounded-md transition-colors font-medium">
+                        <span className="w-5 h-5 flex items-center justify-center text-xl">🚪</span>
+                        Logout
+                    </button>
+                </form>
             </div>
         </aside>
     );

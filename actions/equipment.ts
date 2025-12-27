@@ -58,6 +58,7 @@ export async function getEquipmentList(query?: string) {
                     { name: { contains: query, mode: 'insensitive' } },
                     { serialNumber: { contains: query, mode: 'insensitive' } },
                     { category: { contains: query, mode: 'insensitive' } },
+                    { department: { contains: query, mode: 'insensitive' } },
                 ],
             }
             : {};

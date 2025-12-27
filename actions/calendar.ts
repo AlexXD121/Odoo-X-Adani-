@@ -10,7 +10,8 @@ export async function getCalendarEvents() {
             where: {
                 scheduledDate: {
                     not: null
-                }
+                },
+                type: 'preventive'
             },
             include: {
                 equipment: true,

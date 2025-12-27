@@ -1,6 +1,7 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { FaChartBar, FaCalendarAlt, FaTools, FaColumns, FaUsers, FaBuilding, FaWrench } from 'react-icons/fa';
 
@@ -53,9 +54,19 @@ export function Navbar() {
             <div className="container mx-auto px-4">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link href="/dashboard" className="flex items-center gap-2">
-                        <h1 className="text-xl font-bold tracking-tight text-orange-600">Maintenance</h1>
-                        <span className="text-xs text-slate-500 hidden sm:inline-block">Operations</span>
+                    <Link href="/dashboard" className="flex items-center gap-3">
+                        <div className="relative w-8 h-8 md:w-10 md:h-10">
+                            <Image
+                                src="/logo.png"
+                                alt="MaintFlow Logo"
+                                fill
+                                className="object-contain" // Preserves aspect ratio 
+                            />
+                        </div>
+                        <div className="flex flex-col">
+                            <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-none">MaintFlow</h1>
+                            <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider hidden sm:inline-block">Operations</span>
+                        </div>
                     </Link>
 
                     {/* Navigation Links */}
@@ -68,8 +79,8 @@ export function Navbar() {
                                     {item.subItems ? (
                                         <button
                                             className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none ${active
-                                                ? 'bg-orange-50 text-orange-600'
-                                                : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600'
+                                                ? 'bg-blue-50 text-blue-700'
+                                                : 'text-slate-600 hover:bg-slate-50 hover:text-blue-700'
                                                 }`}
                                         >
                                             <item.icon className="w-4 h-4" />
@@ -79,8 +90,8 @@ export function Navbar() {
                                         <Link
                                             href={item.href}
                                             className={`flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors ${active
-                                                ? 'bg-orange-50 text-orange-600'
-                                                : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600'
+                                                ? 'bg-blue-50 text-blue-700'
+                                                : 'text-slate-600 hover:bg-slate-50 hover:text-blue-700'
                                                 }`}
                                         >
                                             <item.icon className="w-4 h-4" />
@@ -99,8 +110,8 @@ export function Navbar() {
                                                             key={subItem.href + subItem.label}
                                                             href={subItem.href}
                                                             className={`flex items-center gap-2 px-4 py-2 text-sm transition-colors ${subActive
-                                                                ? 'bg-orange-50 text-orange-600 font-medium'
-                                                                : 'text-slate-600 hover:bg-slate-50 hover:text-orange-600'
+                                                                ? 'bg-blue-50 text-blue-700 font-medium'
+                                                                : 'text-slate-600 hover:bg-slate-50 hover:text-blue-700'
                                                                 }`}
                                                         >
                                                             <subItem.icon className="w-3 h-3" />
@@ -124,7 +135,7 @@ export function Navbar() {
                                     <p className="text-sm font-medium text-slate-900">{userName}</p>
                                     <p className="text-xs text-slate-500">Alpha Squad</p>
                                 </div>
-                                <div className="h-8 w-8 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold border border-orange-200">
+                                <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold border border-blue-200">
                                     TB
                                 </div>
                                 <Link
@@ -138,13 +149,13 @@ export function Navbar() {
                             <>
                                 <Link
                                     href="/auth/login"
-                                    className="text-sm font-medium text-slate-600 hover:text-orange-600 transition-colors"
+                                    className="text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors"
                                 >
                                     Login
                                 </Link>
                                 <Link
                                     href="/auth/signup"
-                                    className="px-4 py-2 text-sm font-medium bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors shadow-sm"
+                                    className="px-4 py-2 text-sm font-medium bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors shadow-sm"
                                 >
                                     Sign Up
                                 </Link>
@@ -163,7 +174,7 @@ export function Navbar() {
                             <div key={item.label} className="shrink-0">
                                 {item.subItems ? (
                                     <span
-                                        className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md cursor-default ${active ? 'bg-orange-50 text-orange-600' : 'text-slate-500'
+                                        className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md cursor-default ${active ? 'bg-blue-50 text-blue-700' : 'text-slate-500'
                                             }`}
                                     >
                                         <item.icon className="w-4 h-4" />
@@ -173,7 +184,7 @@ export function Navbar() {
                                     <Link
                                         href={item.href}
                                         className={`flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors ${active
-                                            ? 'bg-orange-50 text-orange-600'
+                                            ? 'bg-blue-50 text-blue-700'
                                             : 'text-slate-600 hover:bg-slate-100'
                                             }`}
                                     >

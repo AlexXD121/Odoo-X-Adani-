@@ -66,7 +66,7 @@ export function MaintenanceCalendar({ events }: MaintenanceCalendarProps) {
                 view={view}
                 onView={(v: any) => setView(v)} // Type casting for ease, often mismatch in types
                 date={date}
-                onNavigate={(d) => setDate(d)}
+                onNavigate={(d: Date) => setDate(d)}
                 eventPropGetter={eventPropGetter}
                 components={{
                     toolbar: CustomToolbar
@@ -116,8 +116,8 @@ const CustomToolbar = (toolbar: any) => {
                         key={view}
                         onClick={() => toolbar.onView(view)}
                         className={`px-3 py-1 text-xs font-semibold uppercase tracking-wide rounded-md transition-all ${toolbar.view === view
-                                ? 'bg-white text-orange-600 shadow-sm'
-                                : 'text-slate-500 hover:text-slate-700'
+                            ? 'bg-white text-orange-600 shadow-sm'
+                            : 'text-slate-500 hover:text-slate-700'
                             }`}
                     >
                         {view}

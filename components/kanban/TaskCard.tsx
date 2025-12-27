@@ -32,6 +32,8 @@ export function TaskCard({ request }: TaskCardProps) {
         }
     };
 
+    const isOverdue = request.dueDate && new Date(request.dueDate) < new Date() && request.status !== 'repaired' && request.status !== 'scrap';
+
     return (
         <div
             ref={setNodeRef}
@@ -39,27 +41,36 @@ export function TaskCard({ request }: TaskCardProps) {
             {...listeners}
             {...attributes}
             className={cn(
-                "p-4 bg-white rounded-lg shadow-sm border border-slate-200 cursor-grab active:cursor-grabbing hover:shadow-md transition-all touch-none select-none",
+                "p-4 bg-white rounded-lg shadow-sm border cursor-grab active:cursor-grabbing hover:shadow-md transition-all touch-none select-none relative overflow-hidden",
+                isOverdue ? "border-red-400 bg-red-50/10" : "border-slate-200",
                 isDragging && "shadow-xl rotate-2 opacity-90 scale-105 z-50 ring-2 ring-blue-400"
             )}
         >
+            {/* Overdue Strip */}
+            {isOverdue && (
+                <div className="absolute top-0 left-0 w-1 h-full bg-red-500" />
+            )}
+
             {/* Header */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center justify-between mb-2 pl-2">
                 <div className="flex items-center gap-2">
                     <div className={cn("w-2 h-2 rounded-full", getPriorityColor(request.priority))} />
                     <span className="text-xs font-mono text-slate-500">#{request.id.slice(0, 5)}</span>
                 </div>
-                {/* Status/Type Icon (Optional) */}
-                {request.type === 'preventive' && <Clock className="w-3 h-3 text-purple-500" />}
+                {/* Status/Icons */}
+                <div className="flex gap-1">
+                    {isOverdue && <span className="text-[10px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full uppercase tracking-wider">Overdue</span>}
+                    {request.type === 'preventive' && <Clock className="w-3 h-3 text-purple-500" />}
+                </div>
             </div>
 
             {/* Body */}
-            <h4 className="text-sm font-semibold text-slate-800 line-clamp-2 mb-3">
+            <h4 className="text-sm font-semibold text-slate-800 line-clamp-2 mb-3 pl-2">
                 {request.title}
             </h4>
 
             {/* Footer */}
-            <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2">
+            <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-2 pl-2">
                 <div className="flex items-center gap-1.5 text-xs text-slate-500 max-w-[70%]">
                     <Wrench className="w-3 h-3 flex-shrink-0" />
                     <span className="truncate">{request.equipment?.name || "Unknown Equipment"}</span>
