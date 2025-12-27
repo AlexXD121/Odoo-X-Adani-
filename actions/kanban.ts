@@ -3,12 +3,18 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-// Mock User for Development - Fetches Technician Bob for RBAC Testing
-// TODO: Replace with real `auth()` session call
+import { verifySession } from "@/lib/session";
+
+// Fetch Real Authenticated User
 async function getCurrentUser() {
-    // Fetch Technician Bob from database to test team-based visibility
-    const bob = await db.user.findUnique({
-        where: { email: 'bob@gear.com' },
+    const session = await verifySession();
+
+    if (!session || typeof session.userId !== 'string') {
+        throw new Error("Unauthorized");
+    }
+
+    const user = await db.user.findUnique({
+        where: { id: session.userId },
         select: {
             id: true,
             role: true,
@@ -17,17 +23,11 @@ async function getCurrentUser() {
         }
     });
 
-    if (bob) {
-        return bob;
+    if (!user) {
+        throw new Error("User not found");
     }
 
-    // Fallback to admin if Bob doesn't exist (e.g., before seeding)
-    return {
-        id: "mock-admin-id",
-        role: "admin",
-        teamId: null,
-        name: "Admin User"
-    };
+    return user;
 }
 
 export type KanbanBoardData = {

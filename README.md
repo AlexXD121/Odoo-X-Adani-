@@ -1,109 +1,112 @@
-# 🛡️ MaintFlow: The Ultimate Maintenance Tracker
+# 🏭 MaintFlow
+> **The "Alive" CMMS for the Modern Factory.**
+> *Submitted for the Next.js Industrial Hackathon.*
 
-> **Hackathon Submission**: A Next-Gen Industrial Maintenance System (CMMS) built with Next.js 14.
+![MaintFlow Banner](public/logo.png)
 
+## ⚡ What is MaintFlow?
 
+**MaintFlow** is not just a form-filler—it's an **intelligent ecosystem** that bridges the gap between your machines (Assets), your people (Teams), and your operations (Requests).
 
-## 🚀 Overview
-**MaintFlow** is a "Smart" Maintenance Management System designed to bridge the gap between **Equipment** (Assets), **Teams** (Workforce), and **Requests** (Operations). Unlike basic forms, MaintFlow is "Alive"—it understands your inventory, automates assignments, and updates equipment status based on real-world actions.
-
----
-
-## 🧠 Core Philosophy
-The module is built on three interconnected pillars:
-1.  **Equipment First**: Every asset knows its **Department**, **Location**, and default **Maintenance Team**.
-2.  **Auto-Routing**: Requests shouldn't be manual. Creating a ticket for a "Drill Press" automatically routes it to the "Mechanics" team.
-3.  **Dynamic State**: Moving a ticket to "Scrap" on the Kanban board doesn't just close the ticket—it **decommissions the machine** in the database.
+Traditional maintenance systems are static "graveyards" of data. MaintFlow is **dynamic**. It understands that when a technician drags a ticket to *"Scrap"* on the Kanban board, the physical machine is decommissioned in the inventory. When a user reports a broken lathe, the system *knows* to alert the **Mechanical Squad** immediately.
 
 ---
 
-## ✨ Key Functional Areas (MVP Features)
+## 🚀 Key "Alive" Features
 
-### 1. 🏭 Equipment Management (The Central Database)
-*   **Smart Tracking**: Track assets by **Department** (Production, Office) or **Employee** (Personal Laptops).
-*   **Status Logic**: Real-time status tracking (`Operational` 🟢, `Maintenance` 🟠, `Breakdown` 🔴, `Scrapped` ⚫).
-*   **"Maintenance" Smart Button**: One-click access to see every repair history for regular assets.
+### 1. 🧠 Intelligent Routing Engine
+Automation is at the core. MaintFlow eliminates manual triage:
+*   **Context Awareness**: Select a specific machine (e.g., "CNC X1"), and the system automatically assigns the ticket to the **Default Maintenance Team** (e.g., "Alpha Squad") and notifies the **Primary Technician**.
+*   **Priority Logic**: Corrective maintenance is flagged based on asset criticality.
 
-### 2. 🔧 Intelligent Request Flow
-*   **Auto-Fill Intelligence**:
-    *   *Select "Industrial Drill Press"* -> System auto-selects **"Alpha Squad"** (Team) and **"Technician Bob"**.
-*   **Two Critical Workflows**:
-    *   **🚑 Corrective (Breakdown)**: Urgent repairs. Tracks priority (`Low` to `Critical`) and visual "Overdue" alerts.
-    *   **📅 Preventive (Routine)**: Scheduled maintenance that appears on a dedicated **Calendar View**.
+### 2. 🔄 Bi-Directional State Sync
+The heart of MaintFlow is the synchronization between **Operations** (Tickets) and **Inventory** (Assets).
+*   **Kanban-Driven Asset Management**:
+    *   Drag ticket to `In Progress` ➡️ Machine marked `Under Maintenance` 🟠
+    *   Drag ticket to `Scrap` ➡️ Machine marked `Decommissioned` ⚫
+    *   Drag ticket to `Repaired` ➡️ Machine marked `Operational` 🟢
+*   **Zero-Drift**: Your inventory status always reflects reality on the shop floor.
 
-### 3. 📊 Visual Operations (The Views)
-*   **Interactive Kanban Board**: Drag-and-drop workflow.
-    *   *New* ➡️ *In Progress* ➡️ *Repaired*
-    *   *Side Effect*: Dragging to "In Progress" marks the machine as "Under Maintenance".
-*   **Maintenance Calendar**: A clear monthly view of all upcoming preventive checks.
-*   **Power Reporting**: Real-time analytics showing:
-    *   Requests by Status & Priority.
-    *   **Breakdown vs. Preventive** Ratio.
-    *   **Team Performance** metrics.
+### 3. 🛡️ Role-Based Visibility (RBAC)
+Secure by design, tailored for clarity.
+*   **Admins**: See the God-View of the entire plant.
+*   **Technicians**: See **ONLY** the tickets assigned to their Squad. Beta Squad never sees Alpha Squad's clutter.
 
----
-
-## 👨‍⚖️ Judge's Guide: How to Test the MVP
-
-Follow this walkthrough to verify the "Alive" logic of MaintFlow.
-
-### Step 1: Login & Setup
-1.  Run the seed script to populate test data:
-    ```bash
-    npx prisma db push
-    npx prisma db seed
-    ```
-2.  Start the app:
-    ```bash
-    npm run dev
-    ```
-3.  Login credentials (Pre-seeded):
-    *   **Admin**: `admin@gearguard.com` / `password123`
-    *   **Tech**: `bob@gear.com` / `password123`
-
-### Step 2: Test "The Breakdown" (Automation)
-1.  Go to **Requests** -> **New Request**.
-2.  Select **"CNC Machine X1"** from the Equipment dropdown.
-3.  **Observe**: The *Assigned Team* automatically fills with "Alpha Squad".
-4.  Set Priority to **Critical** and create the request.
-5.  Go to the **Kanban Board**. Find the card and drag it to the **"Scrap"** column.
-6.  **Verify**: Go to the **Equipment** page. The "CNC Machine X1" status is now permanently **Scrapped**.
-
-### Step 3: Test "The Preventive Schedule"
-1.  Go to the **Calendar** page.
-2.  Look for "Office Printer P-500" scheduled for next Friday (Seeded data).
-3.  Click the event to see details.
-
-### Step 4: Test "Team Visibility" (RBAC)
-1.  Logout and login as **Technician Bob**.
-2.  Go to the **Kanban Board**.
-3.  **Verify**: You ONLY see tasks assigned to **Alpha Squad**. The "Beta Squad" tasks are hidden.
+### 4. 📅 Preventive vs. Corrective
+*   **Corrective**: "It broke now!" -> High priority, Kanban workflow.
+*   **Preventive**: "Check oil in 2 weeks" -> Scheduled, Calendar view workflow.
 
 ---
 
-## 🛠️ Technology Stack
-*   **Framework**: Next.js 14 (App Router)
-*   **Database**: PostgreSQL + Prisma ORM
-*   **Styling**: Tailwind CSS + Shadcn UI
-*   **Visuals**: Recharts (Analytics), React-Big-Calendar, Lucide Icons
-*   **Interactivity**: @dnd-kit (Kanban), React-Hook-Form (Validation)
+## 🛠️ The Tech Stack
+
+Built for performance, scalability, and type-safety.
+
+| Layer | Technology | Why? |
+| :--- | :--- | :--- |
+| **Framework** | **Next.js 14** (App Router) | Server Actions, React Server Components (RSC) |
+| **Database** | **PostgreSQL** | Relational data integrity for Assets <-> Teams |
+| **ORM** | **Prisma** | Type-safe database access & migrations |
+| **Styling** | **Tailwind CSS** | Design system & responsiveness (Carrot Orange Theme) |
+| **UI Library** | **Shadcn/UI** | Accessible, consistent components |
+| **Auth** | **Custom JWT + Cookies** | Secure, stateless session management |
+| **Deployment** | **Vercel** | Edge-ready deployment |
 
 ---
 
-## 📦 Installation
+## 🏗️ Installation & Setup
+
+Get MaintFlow running locally in minutes.
+
+### 1. Clone & Install
 ```bash
-# 1. Install Dependencies
+git clone https://github.com/your-repo/maintflow.git
+cd maintflow
 npm install
+```
 
-# 2. Setup Database (Ensure .env has DATABASE_URL)
-npx prisma generate
+### 2. Configure Environment
+Create a `.env` file in the root:
+```env
+# Your Postgres Connection String
+DATABASE_URL="postgres://user:password@host:5432/maintflow"
+
+# Random string for session encryption
+SESSION_SECRET="your-super-secret-key"
+```
+
+### 3. Setup Database
+```bash
+# Push schema to DB
 npx prisma db push
 
-# 3. Seed Data
+# Seed test data (Admins, Teams, Machines)
 npx prisma db seed
+```
 
-# 4. Run Development Server
+### 4. Run It
+```bash
 npm run dev
 ```
 
-Project deployed on Vercel/Netlify (optional links here).
+---
+
+## 🕵️‍♂️ Judge's Walkthrough
+
+Follow this specific path to see the magic happen:
+
+1.  **Login as Admin** (`admin@gearguard.com` / `password123`).
+2.  **Create a Request**: Go to **Requests -> New**. Pick a machine. Watch the **Team** field auto-fill.
+3.  **The "Alive" Test**:
+    *   Go to **Kanban**.
+    *   Drag a ticket to the red **Scrap** column.
+    *   Navigate to **Equipment**.
+    *   **Verify**: That specific machine is now status **Scrapped**.
+4.  **The RBAC Test**:
+    *   Logout.
+    *   Login as **Bob** (`bob@gear.com` / `password123` - Alpha Squad).
+    *   Notice you ONLY see Alpha Squad tickets.
+
+---
+
+*Built with ❤️ by Team MaintFlow.*
