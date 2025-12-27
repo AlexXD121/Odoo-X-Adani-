@@ -1,11 +1,11 @@
-# 🛡️ GearGuard: The Ultimate Maintenance Tracker
+# 🛡️ MaintFlow: The Ultimate Maintenance Tracker
 
 > **Hackathon Submission**: A Next-Gen Industrial Maintenance System (CMMS) built with Next.js 14.
 
-![GearGuard Banner](public/logo.png)
+
 
 ## 🚀 Overview
-**GearGuard** is a "Smart" Maintenance Management System designed to bridge the gap between **Equipment** (Assets), **Teams** (Workforce), and **Requests** (Operations). Unlike basic forms, GearGuard is "Alive"—it understands your inventory, automates assignments, and updates equipment status based on real-world actions.
+**MaintFlow** is a "Smart" Maintenance Management System designed to bridge the gap between **Equipment** (Assets), **Teams** (Workforce), and **Requests** (Operations). Unlike basic forms, MaintFlow is "Alive"—it understands your inventory, automates assignments, and updates equipment status based on real-world actions.
 
 ---
 
@@ -45,7 +45,7 @@ The module is built on three interconnected pillars:
 
 ## 👨‍⚖️ Judge's Guide: How to Test the MVP
 
-Follow this walkthrough to verify the "Alive" logic of GearGuard.
+Follow this walkthrough to verify the "Alive" logic of MaintFlow.
 
 ### Step 1: Login & Setup
 1.  Run the seed script to populate test data:

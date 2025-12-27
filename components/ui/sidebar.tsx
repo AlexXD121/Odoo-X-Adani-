@@ -17,7 +17,7 @@ export function Sidebar() {
     return (
         <aside className="w-64 bg-sidebar border-r border-sidebar-border text-sidebar-foreground flex flex-col h-screen fixed left-0 top-0">
             <div className="p-6">
-                <h1 className="text-2xl font-bold tracking-tight text-primary">GearGuard</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-primary">MaintFlow</h1>
                 <p className="text-xs text-muted-foreground">Maintenance Ops</p>
             </div>
 
