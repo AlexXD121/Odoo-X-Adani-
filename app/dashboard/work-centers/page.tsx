@@ -4,6 +4,7 @@ import { Search, Filter, SlidersHorizontal, AlertCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { getWorkCenters } from "@/actions/work-centers";
 import Link from "next/link";
+import { CreateWorkCenterModal } from "@/components/work-centers/CreateWorkCenterModal";
 
 
 interface WorkCenter {
@@ -32,9 +33,8 @@ export default async function WorkCentersPage() {
                         </h1>
                         <p className="text-slate-500 text-sm mt-1">Manage production capacity and efficiency targets.</p>
                     </div>
-                    {/* Placeholder for Create Modal if needed later */}
                     <div className="flex gap-3">
-                        {/* <CreateWorkCenterModal /> */}
+                        <CreateWorkCenterModal />
                     </div>
                 </div>
 

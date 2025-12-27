@@ -21,6 +21,8 @@ export async function getWorkCenters() {
 export async function createWorkCenter(data: {
     name: string;
     code: string;
+    tags?: string[];
+    alternative?: string;
     costPerHour?: number;
     capacity?: number;
     timeEfficiency?: number;
@@ -31,6 +33,8 @@ export async function createWorkCenter(data: {
             data: {
                 name: data.name,
                 code: data.code,
+                tags: data.tags || [],
+                alternative: data.alternative || null,
                 costPerHour: data.costPerHour || 0,
                 capacity: data.capacity || 100,
                 timeEfficiency: data.timeEfficiency || 100,

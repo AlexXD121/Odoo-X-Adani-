@@ -77,9 +77,13 @@ export default async function DashboardPage() {
                         </TableHeader>
                         <TableBody>
                             {data.recentActivity.length > 0 ? (
-                                data.recentActivity.map((request) => (
+                                data.recentActivity.map((request: any) => (
                                     <TableRow key={request.id} className="border-slate-200 hover:bg-slate-50">
-                                        <TableCell className="font-medium text-slate-900">{request.title}</TableCell>
+                                        <TableCell className="font-medium text-slate-900">
+                                            <Link href={`/dashboard/requests/${request.id}`} className="hover:underline hover:text-orange-600 block">
+                                                {request.title}
+                                            </Link>
+                                        </TableCell>
                                         <TableCell className="text-slate-600">{request.equipment?.name || "Unknown"}</TableCell>
                                         <TableCell className="text-slate-600">{request.assignedTo?.name || "Unassigned"}</TableCell>
                                         <TableCell>
