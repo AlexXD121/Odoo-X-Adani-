@@ -3,13 +3,30 @@
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
-// Mock User for Development (Simulates an Admin)
+// Mock User for Development - Fetches Technician Bob for RBAC Testing
 // TODO: Replace with real `auth()` session call
 async function getCurrentUser() {
+    // Fetch Technician Bob from database to test team-based visibility
+    const bob = await db.user.findUnique({
+        where: { email: 'bob@gear.com' },
+        select: {
+            id: true,
+            role: true,
+            teamId: true,
+            name: true
+        }
+    });
+
+    if (bob) {
+        return bob;
+    }
+
+    // Fallback to admin if Bob doesn't exist (e.g., before seeding)
     return {
         id: "mock-admin-id",
-        role: "admin", // Change to "technician" to test team logic
-        teamId: null, // "team-alpha-uuid" 
+        role: "admin",
+        teamId: null,
+        name: "Admin User"
     };
 }
 
@@ -72,7 +89,7 @@ export async function getKanbanBoard() {
 
     requests.forEach((req) => {
         const status = req.status;
-        if (status === 'pending') {
+        if (status === 'pending' || status === 'new') {
             board.new.push(req);
         } else if (status === 'in_progress') {
             board.in_progress.push(req);
@@ -94,11 +111,11 @@ export async function updateRequestStage(requestId: string, newStage: string) {
     // newStage comes in as column ID: 'new', 'in_progress', 'repaired', 'scrap'
 
     // Map Column ID to DB Status
-    let dbStatus = 'pending';
+    let dbStatus = 'new';
     if (newStage === 'in_progress') dbStatus = 'in_progress';
     if (newStage === 'repaired') dbStatus = 'repaired';
     if (newStage === 'scrap') dbStatus = 'scrap';
-    if (newStage === 'new') dbStatus = 'pending';
+    if (newStage === 'new') dbStatus = 'new';
 
     // Fetch current request to get equipmentId
     const currentRequest = await db.maintenanceRequest.findUnique({
@@ -108,6 +125,16 @@ export async function updateRequestStage(requestId: string, newStage: string) {
 
     if (!currentRequest) {
         throw new Error("Request not found");
+    }
+
+    // SECURITY CHECK: Enforce team-based access control
+    const currentUser = await getCurrentUser();
+
+    // If user is a technician (not admin/manager), verify they can only move their team's tickets
+    if (currentUser.role !== 'admin' && currentUser.role !== 'manager') {
+        if (currentUser.teamId !== currentRequest.assignedTeamId) {
+            throw new Error("Unauthorized: You can only move tickets assigned to your team.");
+        }
     }
 
     // 1. Update Request Status

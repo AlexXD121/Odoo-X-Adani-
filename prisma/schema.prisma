@@ -65,7 +65,7 @@ model MaintenanceRequest {
   description String?
   instructions String?
   priority    String   @default("medium") // low, medium, high, critical
-  status      String   @default("pending") // pending, in-progress, completed
+  status      String   @default("new") // new, in_progress, repaired, scrap
   type        String   @default("corrective") // preventive, corrective
   scheduledDate DateTime?
   duration    Int      @default(1)

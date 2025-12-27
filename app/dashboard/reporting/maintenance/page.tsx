@@ -1,7 +1,21 @@
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Hammer, CheckCircle, AlertTriangle } from "lucide-react";
+import { getAnalyticsData } from "@/actions/analytics";
+import { Charts } from "@/components/reporting/Charts";
 
-export default function MaintenanceReportingPage() {
+export default async function MaintenanceReportingPage() {
+    const analytics = await getAnalyticsData();
+
+    // Calculate completion rate
+    const completionRate = analytics.total > 0
+        ? Math.round((analytics.completed / analytics.total) * 100)
+        : 0;
+
+    // Get high priority count
+    const highPriorityCount = analytics.byPriority
+        .filter(p => p.name === 'High' || p.name === 'Critical')
+        .reduce((sum, p) => sum + p.count, 0);
+
     return (
         <div className="p-8 max-w-7xl mx-auto space-y-8">
             <div>
@@ -9,6 +23,7 @@ export default function MaintenanceReportingPage() {
                 <p className="text-slate-500 mt-2">Analytical insights into maintenance operations.</p>
             </div>
 
+            {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="border-slate-200">
                     <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -16,8 +31,8 @@ export default function MaintenanceReportingPage() {
                         <Hammer className="w-5 h-5 text-blue-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-slate-900">12</div>
-                        <p className="text-xs text-slate-500 mt-1">+2 from last week</p>
+                        <div className="text-3xl font-bold text-slate-900">{analytics.total}</div>
+                        <p className="text-xs text-slate-500 mt-1">All maintenance requests</p>
                     </CardContent>
                 </Card>
 
@@ -27,8 +42,8 @@ export default function MaintenanceReportingPage() {
                         <CheckCircle className="w-5 h-5 text-green-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-slate-900">8</div>
-                        <p className="text-xs text-slate-500 mt-1">67% completion rate</p>
+                        <div className="text-3xl font-bold text-slate-900">{analytics.completed}</div>
+                        <p className="text-xs text-slate-500 mt-1">{completionRate}% completion rate</p>
                     </CardContent>
                 </Card>
 
@@ -38,18 +53,14 @@ export default function MaintenanceReportingPage() {
                         <AlertTriangle className="w-5 h-5 text-red-500" />
                     </CardHeader>
                     <CardContent>
-                        <div className="text-3xl font-bold text-slate-900">3</div>
+                        <div className="text-3xl font-bold text-slate-900">{highPriorityCount}</div>
                         <p className="text-xs text-slate-500 mt-1">Requires attention</p>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card className="border-slate-200 bg-slate-50 border-dashed min-h-[400px] flex items-center justify-center">
-                <div className="text-center">
-                    <h3 className="text-lg font-semibold text-slate-700">Detailed Analytics Coming Soon</h3>
-                    <p className="text-slate-500">Charts and graphs will be available in the next update.</p>
-                </div>
-            </Card>
+            {/* Charts */}
+            <Charts byStatus={analytics.byStatus} byPriority={analytics.byPriority} />
         </div>
     );
 }
