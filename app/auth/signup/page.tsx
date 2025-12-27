@@ -1,11 +1,11 @@
 'use client';
 
-import { signupAction } from "@/actions/auth";
+import { signup } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SignupSchema } from "@/lib/schemas";
+import { SignupSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -29,7 +29,7 @@ export default function SignupPage() {
     const onSubmit = (values: z.infer<typeof SignupSchema>) => {
         setError(null);
         startTransition(async () => {
-            const result = await signupAction(values);
+            const result = await signup(values);
             if (result?.error) {
                 setError(result.error);
             }

@@ -1,11 +1,11 @@
 'use client';
 
-import { loginAction } from "@/actions/auth";
+import { login } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LoginSchema } from "@/lib/schemas";
+import { LoginSchema } from "@/lib/validations/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useState, useTransition } from "react";
@@ -27,7 +27,7 @@ export default function LoginPage() {
     const onSubmit = (values: z.infer<typeof LoginSchema>) => {
         setError(null);
         startTransition(async () => {
-            const result = await loginAction(values);
+            const result = await login(values);
             if (result?.error) {
                 setError(result.error);
             }

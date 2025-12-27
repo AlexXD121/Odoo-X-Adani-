@@ -46,7 +46,7 @@ model User {
   email     String   @unique
   password  String
   name      String
-  role      String   @default("portal user")
+  role      String   @default("portal_user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
