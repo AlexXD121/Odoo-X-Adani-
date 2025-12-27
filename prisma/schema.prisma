@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Equipment {
+  id          String   @id @default(uuid())
+  name        String
+  type        String
+  status      String   @default("operational") // operational, maintenance, breakdown
+  location    String?
+  requests    MaintenanceRequest[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model MaintenanceRequest {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  priority    String   @default("medium") // low, medium, high, critical
+  status      String   @default("pending") // pending, in-progress, completed
+  equipmentId String
+  equipment   Equipment @relation(fields: [equipmentId], references: [id])
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Team {
+  id             String @id @default(uuid())
+  name           String
+  specialization String
+  availability   Boolean @default(true)
+}
