@@ -10,15 +10,53 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model WorkCenter {
+  id              String      @id @default(uuid())
+  name            String
+  code            String
+  tags            String[]
+  alternative     String?
+  costPerHour     Float       @default(0.0)
+  capacity        Float       @default(100.0)
+  timeEfficiency  Float       @default(100.0)
+  oeeTarget       Float       @default(90.0)
+  equipment       Equipment[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
 model Equipment {
-  id          String   @id @default(uuid())
-  name        String
-  type        String
-  status      String   @default("operational") // operational, maintenance, breakdown
-  location    String?
-  requests    MaintenanceRequest[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id                String   @id @default(uuid())
+  name              String
+  serialNumber      String   @unique
+  category          String   // e.g., "Heavy Machinery", "Electronics"
+  
+  // Tracking (Department OR Employee)
+  department        String?  // e.g., "Production"
+  assignedEmployeeId String? // If personal asset like Laptop
+  assignedEmployee  User?    @relation("EquipmentOwner", fields: [assignedEmployeeId], references: [id])
+
+  // Responsibility
+  maintenanceTeamId String
+  maintenanceTeam   Team     @relation(fields: [maintenanceTeamId], references: [id])
+  
+  // Details
+  location          String
+  purchaseDate      DateTime
+  warrantyEnd       DateTime?
+  status            String   @default("operational") // operational, breakdown, maintenance, scrapped
+  
+  // Legacy / Optional fields retained for compatibility or additional info if needed
+  workCenterId      String?
+  workCenter        WorkCenter? @relation(fields: [workCenterId], references: [id])
+  company           String   @default("GearGuard Inc.")
+  technicianId      String?
+  technician        User?   @relation("EquipmentTechnician", fields: [technicianId], references: [id])
+  description       String?
+
+  requests          MaintenanceRequest[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model MaintenanceRequest {
@@ -27,20 +65,28 @@ model MaintenanceRequest {
   description String?
   priority    String   @default("medium") // low, medium, high, critical
   status      String   @default("pending") // pending, in-progress, completed
+  type        String   @default("corrective") // preventive, corrective
+  scheduledDate DateTime?
+  duration    Int      @default(1)
   equipmentId String
   equipment   Equipment @relation(fields: [equipmentId], references: [id])
   assignedToId String?
   assignedTo   User? @relation(fields: [assignedToId], references: [id])
+  assignedTeamId String?
+  assignedTeam   Team? @relation(fields: [assignedTeamId], references: [id])
   dueDate     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Team {
-  id             String @id @default(uuid())
-  name           String
-  specialization String
-  availability   Boolean @default(true)
+  id          String      @id @default(uuid())
+  name        String
+  companyName String      @default("GearGuard Inc.")
+  members     User[]
+  equipment   Equipment[]
+  requests    MaintenanceRequest[]
+  createdAt   DateTime    @default(now())
 }
 
 model User {
@@ -50,6 +96,10 @@ model User {
   name      String
   role      String   @default("portal_user")
   assignedRequests MaintenanceRequest[]
+  teamId      String?
+  team        Team?       @relation(fields: [teamId], references: [id])
+  assignedEquipment Equipment[] @relation("EquipmentTechnician")
+  ownedEquipment    Equipment[] @relation("EquipmentOwner")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
