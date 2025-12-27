@@ -40,3 +40,13 @@ model Team {
   specialization String
   availability   Boolean @default(true)
 }
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("portal user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
