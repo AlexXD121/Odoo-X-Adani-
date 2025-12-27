@@ -50,9 +50,20 @@ export async function createEquipment(formData: FormData) {
     }
 }
 
-export async function getEquipmentList() {
+export async function getEquipmentList(query?: string) {
     try {
+        const whereClause: Prisma.EquipmentWhereInput = query
+            ? {
+                OR: [
+                    { name: { contains: query, mode: 'insensitive' } },
+                    { serialNumber: { contains: query, mode: 'insensitive' } },
+                    { category: { contains: query, mode: 'insensitive' } },
+                ],
+            }
+            : {};
+
         const equipment = await db.equipment.findMany({
+            where: whereClause,
             include: {
                 maintenanceTeam: true,
                 assignedEmployee: true,
@@ -61,7 +72,7 @@ export async function getEquipmentList() {
                         requests: {
                             where: {
                                 status: {
-                                    notIn: ["repaired", "scrapped", "completed"] // Also excluding completed to be safe, but adhering to spec "not 'repaired', 'scrapped'"
+                                    notIn: ["repaired", "scrapped", "completed"]
                                 }
                             }
                         }

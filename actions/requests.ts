@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { MaintenanceRequest } from "@prisma/client";
+import { MaintenanceRequest, Prisma } from "@prisma/client";
 
 export async function getRequestById(id: string) {
     try {
@@ -21,9 +21,21 @@ export async function getRequestById(id: string) {
     }
 }
 
-export async function getRequests() {
+export async function getRequests(query?: string) {
     try {
+        const whereClause: Prisma.MaintenanceRequestWhereInput = query
+            ? {
+                OR: [
+                    { title: { contains: query, mode: 'insensitive' } },
+                    { id: { contains: query, mode: 'insensitive' } },
+                    { equipment: { name: { contains: query, mode: 'insensitive' } } },
+                    { assignedTo: { name: { contains: query, mode: 'insensitive' } } },
+                ],
+            }
+            : {};
+
         const requests = await db.maintenanceRequest.findMany({
+            where: whereClause,
             include: {
                 equipment: true,
                 assignedTo: true,

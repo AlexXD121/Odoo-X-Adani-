@@ -87,7 +87,7 @@ export async function getKanbanBoard() {
         scrap: []
     };
 
-    requests.forEach((req) => {
+    requests.forEach((req: any) => {
         const status = req.status;
         if (status === 'pending' || status === 'new') {
             board.new.push(req);

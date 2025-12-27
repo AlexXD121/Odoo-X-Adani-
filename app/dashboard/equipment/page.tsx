@@ -1,14 +1,21 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Filter, SlidersHorizontal, Wrench, AlertCircle } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Filter, SlidersHorizontal, Wrench, AlertCircle } from "lucide-react";
 import { getEquipmentList } from "@/actions/equipment";
 import { CreateEquipmentModal } from "@/components/equipment/CreateEquipmentModal";
+import { Search } from "@/components/ui/search";
 import Link from "next/link";
 
-export default async function EquipmentPage() {
-    // Fetch data safely
-    const { data: equipmentList } = await getEquipmentList();
+export default async function EquipmentPage({
+    searchParams,
+}: {
+    searchParams?: Promise<{ query?: string }>;
+}) {
+    const params = await searchParams;
+    const query = params?.query || "";
+
+    // Fetch data safely with query
+    const { data: equipmentList } = await getEquipmentList(query);
     const safeEquipment = equipmentList || [];
 
     return (
@@ -31,8 +38,7 @@ export default async function EquipmentPage() {
                     <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
                         <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
                             <div className="relative flex-1 lg:w-72">
-                                <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                                <Input placeholder="Search equipment..." className="pl-9 h-9 bg-slate-50/50 border-slate-200 focus-visible:ring-orange-500/20" />
+                                <Search placeholder="Search equipment..." />
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button variant="outline" className="h-9 bg-white border-slate-200 text-slate-600 gap-2 text-sm font-medium hover:bg-slate-50">
@@ -119,7 +125,7 @@ export default async function EquipmentPage() {
                                                     <AlertCircle className="w-6 h-6 text-slate-400" />
                                                 </div>
                                                 <p className="text-slate-500 font-medium">No equipment found.</p>
-                                                <p className="text-slate-400 text-xs">Get started by creating a new asset.</p>
+                                                <p className="text-slate-400 text-xs">Try adjusting your search query.</p>
                                             </div>
                                         </td>
                                     </tr>

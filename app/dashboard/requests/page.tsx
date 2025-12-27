@@ -5,9 +5,16 @@ import { getRequests } from "@/actions/requests";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Search } from "@/components/ui/search";
 
-export default async function RequestsPage() {
-    const { data: requests } = await getRequests();
+export default async function RequestsPage({
+    searchParams,
+}: {
+    searchParams?: Promise<{ query?: string }>;
+}) {
+    const params = await searchParams;
+    const query = params?.query || "";
+    const { data: requests } = await getRequests(query);
 
     const getStatusColor = (status: string) => {
         switch (status.toLowerCase()) {
@@ -40,6 +47,13 @@ export default async function RequestsPage() {
                 </Link>
             </div>
 
+            {/* Search Bar */}
+            <div className="bg-white border border-slate-200 rounded-xl shadow-sm p-4">
+                <div className="max-w-md">
+                    <Search placeholder="Search requests by title, ID, equipment, or technician..." />
+                </div>
+            </div>
+
             <Card className="border-slate-200 shadow-sm bg-white">
                 <CardContent className="p-0">
                     <table className="w-full">
@@ -54,7 +68,7 @@ export default async function RequestsPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
-                            {requests?.map((req) => (
+                            {requests?.map((req: any) => (
                                 <tr key={req.id} className="hover:bg-slate-50 transition-colors">
                                     <td className="py-3 px-4">
                                         <Link href={`/dashboard/requests/${req.id}`} className="block group">
@@ -103,7 +117,10 @@ export default async function RequestsPage() {
                             {(!requests || requests.length === 0) && (
                                 <tr>
                                     <td colSpan={6} className="py-8 text-center text-slate-500">
-                                        No maintenance requests found.
+                                        <div className="flex flex-col items-center justify-center gap-2">
+                                            <p className="text-slate-900 font-medium">No maintenance requests found.</p>
+                                            <p className="text-sm text-slate-400">Try adjusting your search terms.</p>
+                                        </div>
                                     </td>
                                 </tr>
                             )}

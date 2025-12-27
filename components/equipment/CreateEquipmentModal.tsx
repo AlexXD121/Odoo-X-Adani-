@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -100,9 +101,11 @@ export function CreateEquipmentModal() {
 
         const res = await createEquipment(formData);
         if (res.success) {
+            toast.success("Equipment created successfully");
             setOpen(false);
             form.reset();
         } else {
+            toast.error(res.error || "Failed to create equipment");
             console.error(res.error);
         }
     }

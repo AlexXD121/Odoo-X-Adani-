@@ -6,8 +6,9 @@ import { getRequestById } from '@/actions/requests';
 import { StatusUpdater } from '@/components/requests/StatusUpdater';
 import { format } from 'date-fns';
 
-export default async function RequestDetailsPage({ params }: { params: { id: string } }) {
-    const { data: request } = await getRequestById(params.id);
+export default async function RequestDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
+    const { data: request } = await getRequestById(id);
 
     if (!request) {
         notFound();

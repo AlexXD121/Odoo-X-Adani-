@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -108,9 +109,11 @@ export default function NewRequestPage() {
         const res = await createRequest(formData);
 
         if (res.success) {
+            toast.success("Maintenance request created successfully");
             router.push("/dashboard/requests");
         } else {
             console.error(res.error);
+            toast.error(res.error || "Failed to create request");
             setIsLoading(false);
         }
     }
